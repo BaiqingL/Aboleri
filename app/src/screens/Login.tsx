@@ -5,18 +5,14 @@ import '@patternfly/react-core/dist/styles/base.css';
 
 const Login: React.FunctionComponent = () => {
   const [loggingIn, setLoggingIn] = React.useState(false);
-  const [error, setError] = React.useState('');
 
   const handleLogin = async () => {
     setLoggingIn(true);
-    setError('');
     try {
       // Attempt login here
       console.log(loggingIn);
-    } catch (err) {
-      setError("Error");
-    } finally {
-      setLoggingIn(false);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -27,11 +23,6 @@ const Login: React.FunctionComponent = () => {
           <div>
             <h1>Welcome to Aboleri</h1>
             <p>To get started, please log in with your Spotify account.</p>
-            {error && (
-              <div>
-                <ExclamationCircleIcon /> {error}
-              </div>
-            )}
           </div>
         </CardBody>
         <Button variant="primary" onClick={handleLogin}>
