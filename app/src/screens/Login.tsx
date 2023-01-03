@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Button } from '@patternfly/react-core';
 import '@patternfly/react-core/dist/styles/base.css';
+import env from "ts-react-dotenv";
 
 const Login: React.FunctionComponent = () => {
-  const [loggingIn, setLoggingIn] = React.useState(false);
 
   const handleLogin = async () => {
-    setLoggingIn(true);
     try {
       // Attempt login here
-      console.log(loggingIn);
+      console.log(env.CLIENT_ID);
     } catch (e) {
       console.log(e);
     }
