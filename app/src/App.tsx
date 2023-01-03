@@ -3,16 +3,12 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Login from './screens/Login';
 import './App.css';
 
-const onLogin = (username: string, password: string) => {
-  console.log(username, password);
-};
-
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-        <Route path="/" element={<Login onLogin={onLogin}/>} />
+        <Route path="/" element={<Login/>} />
         </Routes>
       </BrowserRouter>
     </div>
