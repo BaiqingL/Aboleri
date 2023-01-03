@@ -6,12 +6,9 @@ import env from "ts-react-dotenv";
 const Login: React.FunctionComponent = () => {
 
   const handleLogin = async () => {
-    try {
-      // Attempt login here
-      console.log(env.CLIENT_ID);
-    } catch (e) {
-      console.log(e);
-    }
+    const login = `https://accounts.spotify.com/authorize?client_id=${env.CLIENT_ID}&response_type=code&redirect_uri=${env.REDIRECT_URI}`;
+    // Open the login page in a new window
+    window.open(login, "_self");
   };
 
   return (

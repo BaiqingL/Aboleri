@@ -46,6 +46,6 @@
     ]
   },
   "react-dotenv": {
-    "whitelist": ["CLIENT_ID", "CLIENT_ID"]
+    "whitelist": ["CLIENT_ID", "CLIENT_ID", "REDIRECT_URI"]
   }
 }
