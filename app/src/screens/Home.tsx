@@ -91,7 +91,7 @@ const Home: React.FC = () => {
     // First get liked songs
     getLikedSongs(spotifyApi).then((data) => {
         if (data) {
-            // Filter the songs if Kanye West or KIDS SEE GHOSTS exist in the artist list at all
+            // Filter the songs if Kanye West, KIDS SEE GHOSTS, or Sunday Service Choir exist in the artist list at all
             var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West" || artist.name === "KIDS SEE GHOSTS" || artist.name === "Sunday Service Choir"));
             kanyeSongs.forEach((item) => {
                 spotifyApi.removeFromMySavedTracks([item.track.id]).then(() => {
@@ -102,8 +102,8 @@ const Home: React.FC = () => {
         // Then get liked albums
         getLikedAlbums(spotifyApi).then((data) => {
             if (data) {
-                // Filter the albums if Kanye West exist in the artist list at all
-                var kanyeAlbums = data.filter((item) => item.album.artists.some((artist) => artist.name === "Kanye West"));
+                // Filter the albums if Kanye West or Sunday Service Choice exist in the artist list at all
+                var kanyeAlbums = data.filter((item) => item.album.artists.some((artist) => artist.name === "Kanye West" || artist.name === "Sunday Service Choir"));
                 kanyeAlbums.forEach((item) => {
                     spotifyApi.removeFromMySavedAlbums([item.album.id]).then(() => {
                         incrementKanyeFound();
@@ -133,7 +133,7 @@ const Home: React.FC = () => {
       <br />
       { showDeleteButton && 
         <Button onClick={() => confirmAndStart()} variant="secondary" isDanger >
-          Delete Kanye
+          Delete Kanye?
         </Button>
       }
       { !showDeleteButton &&
@@ -151,27 +151,27 @@ const Home: React.FC = () => {
           titleId="basic-alignment-step1-title"
           aria-label="completed step, step with success"
         >
-          First step
+          First Step
         </ProgressStep>
         <ProgressStep
           variant= {secondStepState} 
           isCurrent= {secondStepState === "info"}
-          description="Finding and removing anything that is related to Kanye West."
+          description="Finding and removing music related to Kanye West (e.g. solo work, KIDS SEE GHOSTS, Sunday Service Choir)."
           id="basic-alignment-step2"
           titleId="basic-alignment-step2-title"
           aria-label="step with info"
         >
-          Second step
+          Second Step
         </ProgressStep>
         <ProgressStep
           variant= {thirdStepState} 
           isCurrent= {thirdStepState === "info"}
-          description="Enjoy Kanye free Spotify."
+          description="Enjoy Kanye free Spotify!"
           id="basic-alignment-step3"
           titleId="basic-alignment-step3-title"
           aria-label="pending step"
         >
-          Third step
+          Third Step
         </ProgressStep>
       </ProgressStepper>
     </React.Fragment>
