@@ -4,9 +4,9 @@ import SpotifyWebApi from 'spotify-web-api-js';
 
 const Home: React.FC = () => {
   const location = useLocation();
-  const code = location.state?.code;
+  const accessToken = location.state?.accessToken;
   var spotifyApi = new SpotifyWebApi();
-  spotifyApi.setAccessToken(code);
+  spotifyApi.setAccessToken(accessToken);
 
   spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE', function (err, data) {
   if (err) console.error(err);
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <h1>Home</h1>
-      <p>Code: {code}</p>
+      <p>Code: {accessToken}</p>
     </div>
   );
 };
