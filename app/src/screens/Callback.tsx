@@ -16,7 +16,7 @@ const Callback: React.FC<Props> = (props: Props) => {
   const data = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: "https://deletemrwest.com/callback",
+    redirect_uri: env.REACT_APP_REDIRECT_URI,
   };
   const body = new URLSearchParams();
   for (const [key, value] of Object.entries(data)) {
@@ -28,7 +28,7 @@ const Callback: React.FC<Props> = (props: Props) => {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: "Basic " + btoa(env.CLIENT_ID + ":" + env.CLIENT_SECRET),
+      Authorization: "Basic " + btoa(env.REACT_APP_CLIENT_ID + ":" + env.REACT_APP_CLIENT_SECRET),
     },
     body: body,
   });
@@ -47,7 +47,7 @@ const Callback: React.FC<Props> = (props: Props) => {
   // Navigate to Home with the code
   // https://github.com/react-navigation/react-navigation/issues/10803
   // Redirect to Home
-  return <div>Loading... if the app doesn't work please reload</div>;
+  return <div className="Center">Loading... if the app doesn't work please reload</div>;
 };
 
 export default Callback;
