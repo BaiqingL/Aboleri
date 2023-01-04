@@ -9,8 +9,21 @@ async function getName(API: SpotifyWebApi.SpotifyWebApiJs) {
 }
 
 async function getLikedSongs(API: SpotifyWebApi.SpotifyWebApiJs) {
-  const data = await API.getMySavedTracks();
-  return data;
+  // Create a list called liked songs, then call the getMySavedTracks with a limit of 50 and initial offset of 0
+  // Then loop through the list and add the items to the liked songs list, then call the getMySavedTracks again with a limit of 50 and offset of 50
+  // Do this until the returned number of elements is smaller than 50
+  // Create list as an array of UsersSavedTracksResponse
+  var likedSongs: SpotifyApi.SavedTrackObject[] = [];
+  var offset = 0;
+  var limit = 50;
+  var data = await API.getMySavedTracks({limit: limit, offset: offset});
+  while (data.items.length === limit) {
+    likedSongs = likedSongs.concat(data.items);
+    offset += limit;
+    data = await API.getMySavedTracks({limit: limit, offset: offset});
+  }
+  likedSongs = likedSongs.concat(data.items);
+  return likedSongs;
 }
 
 async function getLikedAlbums(API: SpotifyWebApi.SpotifyWebApiJs) {
@@ -42,7 +55,7 @@ const Home: React.FC = () => {
     getLikedSongs(spotifyApi).then((data) => {
         if (data) {
             // Filter the songs if Kanye West exist in the artist list at all
-            var kanyeSongs = data.items.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West"));
+            var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West"));
             kanyeSongs.forEach((item) => {
                 spotifyApi.removeFromMySavedTracks([item.track.id]).then(() => {
                     incrementKanyeFound();
@@ -62,10 +75,9 @@ const Home: React.FC = () => {
             }
         });
         setSecondStepState("success");
-        setThirdStepState("info");
+        setThirdStepState("success");
       }
     );
-    setThirdStepState("success");
   }
 
   useEffect(() => {
