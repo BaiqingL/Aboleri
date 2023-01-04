@@ -16,7 +16,7 @@ const Callback: React.FC<Props> = (props: Props) => {
   const data = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: "http://localhost:3000/callback",
+    redirect_uri: "https://deletemrwest.com/callback",
   };
   const body = new URLSearchParams();
   for (const [key, value] of Object.entries(data)) {
