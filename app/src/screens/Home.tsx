@@ -8,6 +8,11 @@ async function getName(API: SpotifyWebApi.SpotifyWebApiJs) {
   return data.display_name;
 }
 
+async function getUserID(API: SpotifyWebApi.SpotifyWebApiJs) {
+  const data = await API.getMe();
+  return data.id;
+}
+
 async function getLikedSongs(API: SpotifyWebApi.SpotifyWebApiJs) {
   // Create a list called liked songs, then call the getMySavedTracks with a limit of 50 and initial offset of 0
   // Then loop through the list and add the items to the liked songs list, then call the getMySavedTracks again with a limit of 50 and offset of 50
@@ -40,6 +45,29 @@ async function getLikedAlbums(API: SpotifyWebApi.SpotifyWebApiJs) {
   return likedAlbums;
 }
 
+async function getMyPlaylists(API: SpotifyWebApi.SpotifyWebApiJs) {
+  var myPlaylists: SpotifyApi.PlaylistObjectSimplified[] = [];
+  var offset = 0;
+  var limit = 10;
+  var userID = await getUserID(API);
+  var data = await API.getUserPlaylists(userID, {limit: limit, offset: offset});
+  while (data.items.length === limit) {
+    myPlaylists = myPlaylists.concat(data.items);
+    offset += limit;
+    data = await API.getUserPlaylists(userID, {limit: limit, offset: offset});
+  }
+  myPlaylists = myPlaylists.concat(data.items);
+  // Get the tracks for each playlist
+  var myPlaylistTracks: SpotifyApi.PlaylistTrackObject[] = [];
+  myPlaylists.forEach((playlist) => {
+    API.getPlaylistTracks(playlist.id).then((data) => {
+      myPlaylistTracks = myPlaylistTracks.concat(data.items);
+    });
+  }
+  );
+  return myPlaylistTracks;
+}
+
 const Home: React.FC = () => {
   const [profile, setProfile] = useState('');
   const [firstStepState, setFirstStepState] = useState("info" as ProgressStepProps['variant']);
@@ -64,7 +92,7 @@ const Home: React.FC = () => {
     getLikedSongs(spotifyApi).then((data) => {
         if (data) {
             // Filter the songs if Kanye West or KIDS SEE GHOSTS exist in the artist list at all
-            var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West" || artist.name === "KIDS SEE GHOSTS"));
+            var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West" || artist.name === "KIDS SEE GHOSTS" || artist.name === "Sunday Service Choir"));
             kanyeSongs.forEach((item) => {
                 spotifyApi.removeFromMySavedTracks([item.track.id]).then(() => {
                     incrementKanyeFound();
@@ -82,6 +110,8 @@ const Home: React.FC = () => {
                     });
                 });
             }
+            // Then get playlists
+            
         });
         setSecondStepState("success");
         setThirdStepState("success");
