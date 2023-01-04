@@ -13,6 +13,11 @@ async function getLikedSongs(API: SpotifyWebApi.SpotifyWebApiJs) {
   return data;
 }
 
+async function getLikedAlbums(API: SpotifyWebApi.SpotifyWebApiJs) {
+  const data = await API.getMySavedAlbums();
+  return data;
+}
+
 const Home: React.FC = () => {
   const [profile, setProfile] = useState('');
   const [firstStepState, setFirstStepState] = useState("info" as ProgressStepProps['variant']);
@@ -33,32 +38,40 @@ const Home: React.FC = () => {
     setShowDeleteButton(false);
     setFirstStepState("success");
     setSecondStepState("info");
+    // First get liked songs
     getLikedSongs(spotifyApi).then((data) => {
         if (data) {
             // Filter the songs if Kanye West exist in the artist list at all
             var kanyeSongs = data.items.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West"));
             kanyeSongs.forEach((item) => {
                 spotifyApi.removeFromMySavedTracks([item.track.id]).then(() => {
-                    console.log("Removed " + item.track.name);
                     incrementKanyeFound();
-                    console.log("kanyeFound" + kanyeFound);
-                    // delay the next call to avoid rate limiting
                 });
             });
-            setSecondStepState("success");
-            // Map the songs individually
-
-            setThirdStepState("success");
         }
-    }
+        // Then get liked albums
+        getLikedAlbums(spotifyApi).then((data) => {
+            if (data) {
+                // Filter the albums if Kanye West exist in the artist list at all
+                var kanyeAlbums = data.items.filter((item) => item.album.artists.some((artist) => artist.name === "Kanye West"));
+                kanyeAlbums.forEach((item) => {
+                    spotifyApi.removeFromMySavedAlbums([item.album.id]).then(() => {
+                        incrementKanyeFound();
+                    });
+                });
+            }
+        });
+        setSecondStepState("success");
+        setThirdStepState("info");
+      }
     );
+    setThirdStepState("success");
   }
 
   useEffect(() => {
     getName(spotifyApi).then((data) => {
         if (data) {
             setProfile(data);
-            console.log(data);
         }
     });
   }, []);
@@ -73,7 +86,7 @@ const Home: React.FC = () => {
         </Button>
       }
       { !showDeleteButton &&
-        <p>Deleted {kanyeFound} track(s).</p>
+        <p>Deleted {kanyeFound} track(s) and album(s).</p>
       }
       <br />
       <React.Fragment>
