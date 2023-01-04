@@ -27,8 +27,17 @@ async function getLikedSongs(API: SpotifyWebApi.SpotifyWebApiJs) {
 }
 
 async function getLikedAlbums(API: SpotifyWebApi.SpotifyWebApiJs) {
-  const data = await API.getMySavedAlbums();
-  return data;
+  var likedAlbums: SpotifyApi.SavedAlbumObject[] = [];
+  var offset = 0;
+  var limit = 50;
+  var data = await API.getMySavedAlbums({limit: limit, offset: offset});
+  while (data.items.length === limit) {
+    likedAlbums = likedAlbums.concat(data.items);
+    offset += limit;
+    data = await API.getMySavedAlbums({limit: limit, offset: offset});
+  }
+  likedAlbums = likedAlbums.concat(data.items);
+  return likedAlbums;
 }
 
 const Home: React.FC = () => {
@@ -66,7 +75,7 @@ const Home: React.FC = () => {
         getLikedAlbums(spotifyApi).then((data) => {
             if (data) {
                 // Filter the albums if Kanye West exist in the artist list at all
-                var kanyeAlbums = data.items.filter((item) => item.album.artists.some((artist) => artist.name === "Kanye West"));
+                var kanyeAlbums = data.filter((item) => item.album.artists.some((artist) => artist.name === "Kanye West"));
                 kanyeAlbums.forEach((item) => {
                     spotifyApi.removeFromMySavedAlbums([item.album.id]).then(() => {
                         incrementKanyeFound();
