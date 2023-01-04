@@ -63,8 +63,8 @@ const Home: React.FC = () => {
     // First get liked songs
     getLikedSongs(spotifyApi).then((data) => {
         if (data) {
-            // Filter the songs if Kanye West exist in the artist list at all
-            var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West"));
+            // Filter the songs if Kanye West or KIDS SEE GHOSTS exist in the artist list at all
+            var kanyeSongs = data.filter((item) => item.track.artists.some((artist) => artist.name === "Kanye West" || artist.name === "KIDS SEE GHOSTS"));
             kanyeSongs.forEach((item) => {
                 spotifyApi.removeFromMySavedTracks([item.track.id]).then(() => {
                     incrementKanyeFound();
