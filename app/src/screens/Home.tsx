@@ -26,7 +26,7 @@ const Home: React.FC = () => {
   spotifyApi.setAccessToken(accessToken);
 
   const incrementKanyeFound = () => {
-    setKanyeFound(kanyeFound + 1);
+    setKanyeFound(kanyeFound => kanyeFound + 1);
   }
 
   const confirmAndStart = () => {
