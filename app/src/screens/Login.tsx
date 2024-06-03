@@ -14,8 +14,10 @@ const Login: React.FunctionComponent = () => {
   return (
   <div className="Center">
     <div>
-      <h1>Welcome to DeleteMrWest</h1>
+      <h1 style="font-size:24px;">Welcome to DeleteMrWest</h1>
+      <br>
       <p>To get started, please log in with your Spotify account.</p>
+      <br>
     </div>
     <Button variant="primary" onClick={handleLogin}>
       Log in with Spotify
